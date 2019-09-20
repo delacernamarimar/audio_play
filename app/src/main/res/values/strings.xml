@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">AudioPlay</string>
+<!--    buttons-->
+    <string name="play_audio">Play Audio</string>
+
+    <!--    switches -->
+    <string name="play_over_bluetooth">Play over bluetooth</string>
+    <string name="play_voice_during_calls">Play voice during calls</string>
+
 </resources>
