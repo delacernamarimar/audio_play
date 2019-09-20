@@ -24,13 +24,6 @@
         android:text="@string/play_audio" />
 
     <Switch
-        android:id="@+id/sw_play_voice_during_calls"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="@string/play_voice_during_calls"
-        android:enabled="true"/>
-    <Switch
         android:id="@+id/sw_play_over_bluetooth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

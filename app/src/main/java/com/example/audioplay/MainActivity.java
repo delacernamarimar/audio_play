@@ -19,14 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
     TextToSpeech tts;
     EditText et_text_to_speech;
     Button btn_play_audio;
-    Switch sw_play_voice_during_calls, sw_play_over_bluetooth;
+    Switch sw_play_over_bluetooth;
     private AudioManager audioM;
-    BluetoothAdapter btAdapter;
-    BluetoothManager bMgr = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private void initApp() {
         et_text_to_speech = findViewById(R.id.et_text_to_speech);
         btn_play_audio = findViewById(R.id.btn_play_audio);
-        sw_play_voice_during_calls = findViewById(R.id.sw_play_voice_during_calls);
         sw_play_over_bluetooth = findViewById(R.id.sw_play_over_bluetooth);
         audioM = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         audioM.setMode(audioM.MODE_IN_COMMUNICATION);
@@ -62,13 +58,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
 
-            }
-        });
-
-        sw_play_voice_during_calls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // do something, the isChecked will be
-                Toast.makeText(MainActivity.this, "Test " + isChecked, Toast.LENGTH_SHORT).show();
             }
         });
 
