@@ -6,5 +6,9 @@
     <!--    switches -->
     <string name="play_over_bluetooth">Play over bluetooth</string>
     <string name="play_voice_during_calls">Play voice during calls</string>
+    <string name="switch_1">Play over 1</string>
+    <string name="switch_2">Play over 2</string>
+    <string name="switch_3">Play over 3</string>
+
 
 </resources>

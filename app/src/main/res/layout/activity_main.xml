@@ -29,4 +29,22 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="@string/play_over_bluetooth" />
+    <Switch
+        android:id="@+id/sw_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="@string/switch_1" />
+    <Switch
+        android:id="@+id/sw_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="@string/switch_2" />
+    <Switch
+        android:id="@+id/sw_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="@string/switch_3" />
 </LinearLayout>
