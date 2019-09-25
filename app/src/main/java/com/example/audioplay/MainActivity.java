@@ -3,9 +3,16 @@ package com.example.audioplay;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.media.MediaPlayer;
+import android.media.MediaRouter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +24,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -31,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements AudioManager.OnAu
     private AudioManager audioM;
     BluetoothAdapter btAdapter;
     BluetoothManager bMgr = null;
+    private MediaPlayer mediaPlayer;
+    private MediaPlayer mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +56,13 @@ public class MainActivity extends AppCompatActivity implements AudioManager.OnAu
 
     private void initApp() {
 
-        audioM = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        audioM.setBluetoothScoOn(false);
-//        audioM.startBluetoothSco();
+        audioM = (AudioManager)getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+        audioM.setMode(AudioManager.STREAM_MUSIC);
         audioM.setSpeakerphoneOn(true);
-
-        et_text_to_speech.setText("This method should only be used by applications that replace the platform-wide management of audio settings or the main telephony application.");
+        et_text_to_speech.setText("This method should only be used by applications that replace the platform-wide management of audio settings or the main telephony application." +
+                "This method should only be used by applications that replace the platform-wide management of audio settings or the main telephony application." +
+                "This method should only be used by applications that replace the platform-wide management of audio settings or the main telephony application." +
+                "This method should only be used by applications that replace the platform-wide management of audio settings or the main telephony application.");
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -87,20 +99,14 @@ public class MainActivity extends AppCompatActivity implements AudioManager.OnAu
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 boolean on = isChecked;
                 if (on) {
-//                    audioM = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-//                    audioM.setMode(AudioManager.MODE_NORMAL);
-//                    audioM.setBluetoothScoOn(true);
-//                    audioM.startBluetoothSco();
-//                    tts.stop();
-//                    audioM.setMode(AudioManager.MODE_NORMAL);
-//                    audioM.setSpeakerphoneOn(false);
+                    audioM.setMode(AudioManager.MODE_NORMAL);
                 } else {
-//                    audioM.setBluetoothScoOn(false);
-//                    audioM = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-//                    audioM.setMode(AudioManager.MODE_NORMAL);
-//                    tts.stop();
-//                    audioM.setMode(AudioManager.MODE_IN_CALL);
+//                    audioM.setMode(AudioManager.STREAM_MUSIC);
 //                    audioM.setSpeakerphoneOn(true);
+
+                    audioM.setMode(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE);
+                    audioM.setMode(audioM.STREAM_MUSIC);
+                    audioM.setSpeakerphoneOn(true);
 
                 }
             }
@@ -140,22 +146,58 @@ public class MainActivity extends AppCompatActivity implements AudioManager.OnAu
 //        // Request audio focus for playback
         int result = audioM.requestAudioFocus(afChangeListener, // Use the music stream.
                 AudioManager.STREAM_MUSIC, // Request permanent focus.
-                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                AudioManager.AUDIOFOCUS_GAIN);
         Log.d(TAG, "speakPhrase: result:" + result);
 //        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             final HashMap<String, String> params = new HashMap<String, String>();
-            params.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, ".75");
-            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, phrase);
-        params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_SYSTEM + "");
+        params.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, ".75");
+        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, phrase);
+        params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_MUSIC + "");
+//        AudioManager audioManager = (AudioManager)getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+//        audioManager.setMode(AudioManager.STREAM_MUSIC);
+//        audioManager.setSpeakerphoneOn(true);
 
-            tts.speak(params.get(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID), TextToSpeech.QUEUE_ADD, params);
+
+//        HashMap<String, String> myHashRender = new HashMap();
+//        String wakeUpText = "Are you up yet?";
+//        String destFileName = "/sdcard/wakeUps.wav";
+//        myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, wakeUpText);
+//        tts.synthesizeToFile(wakeUpText, myHashRender, destFileName);
+
+//        MediaPlayer mp = MediaPlayer.create(this,);
+//            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            mp.start();
+//        AudioManager audioManager = (AudioManager)getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+//        audioManager.setMode(AudioManager.STREAM_MUSIC);
+//        audioManager.setSpeakerphoneOn(true);
+        tts.speak(params.get(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID), TextToSpeech.QUEUE_ADD, params);
+
+//        tts.speak(phrase, TextToSpeech.QUEUE_FLUSH, null, null);
+
+//        requestAudioFocus();
+//        tts.speak(phrase, TextToSpeech.QUEUE_FLUSH, null, null);
+//        override bluetooth with speaker
+//        try {
+//            String PATH_TO_FILE = "/sdcard/wakeUps.mp3";
+//            mediaPlayer = new  MediaPlayer();
+//            mediaPlayer.setDataSource(PATH_TO_FILE);
+//            mediaPlayer.prepare();
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            mediaPlayer.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
+//        }
+
     }
     AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
                 // Pause playback
+                audioM.setMode(audioM.STREAM_MUSIC);
+                audioM.setSpeakerphoneOn(true);
                 Log.d(TAG, "onAudioFocusChange: AUDIOFOCUS_LOSS_TRANSIENT");
+
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                 // Resume playback
                 Log.d(TAG, "onAudioFocusChange: AUDIOFOCUS_GAIN");
@@ -171,4 +213,7 @@ public class MainActivity extends AppCompatActivity implements AudioManager.OnAu
     public void onAudioFocusChange(int focusChange) {
 
     }
+
+
+
 }
